@@ -4,6 +4,8 @@ from sqlalchemy import *
 from test.lib import *
 from test.lib.testing import eq_
 
+import sqlalchemy.dialects.cassandra as cassandra
+
 class TestTypes(fixtures.TestBase, AssertsExecutionResults):
 
     __only_on__ = 'cassandra'
@@ -16,12 +18,12 @@ class TestTypes(fixtures.TestBase, AssertsExecutionResults):
         """
 
         meta = MetaData(testing.db)
-        t = Table('bool_table', meta, Column('id', Integer,
-                  primary_key=True), Column('boo',
-                  Boolean(create_constraint=False)))
+        t = Table('test_table', meta,
+                  Column('id', Integer, primary_key=True),
+                  Column('key', cassandra.UUID()))
+
         try:
             meta.create_all()
         finally:
-            pass
-            #meta.drop_all()
+            meta.drop_all()
 
